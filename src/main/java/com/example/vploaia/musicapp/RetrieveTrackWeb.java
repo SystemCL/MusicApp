@@ -1,8 +1,13 @@
 package com.example.vploaia.musicapp;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,26 +30,26 @@ public class RetrieveTrackWeb extends AppCompatActivity implements TrackService 
     }
 
     @Override
-    public void retrieveTracks(String searchTerm, final SearchTrackResultCallback callback) {
+    public void retrieveTracks(final String searchTerm, final SearchTrackResultCallback callback) {
 
-        TracksApiEndpointInterface service = TracksApiEndpointInterface.retrofit.create(TracksApiEndpointInterface.class);
+            TracksApiEndpointInterface service = TracksApiEndpointInterface.retrofit.create(TracksApiEndpointInterface.class); //make request
 
-        Call<TrackResult> call = service.getTracksList(searchTerm);
+            Call<TrackResult> call = service.getTracksList(searchTerm);
 
-        call.enqueue(new Callback<TrackResult>() {
-            @Override
-            public void onResponse(Call<TrackResult> call, Response<TrackResult> response) {
+            call.enqueue(new Callback<TrackResult>() {
+                @Override
+                public void onResponse(Call<TrackResult> call, Response<TrackResult> response) {
 
-                if (callback != null) {
-                    callback.onSearchTrackResult(response.body().getTracks());
+                    if (callback != null) {
+                        callback.onSearchTrackResult(response.body().results);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<TrackResult> call, Throwable t) {
-                Log.e("E", t.getMessage(), t);
-            }
-        });
-
+                @Override
+                public void onFailure(Call<TrackResult> call, Throwable t) {
+                    Log.e("E", t.getMessage(), t);
+                }
+            });
     }
+
 }

@@ -1,5 +1,6 @@
 package com.example.vploaia.musicapp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,33 +8,7 @@ import java.util.List;
  */
 public class TrackResult {
 
-    public static List<Track> results;
+    public List<Track> results;
 
-    private String trackCount;
-
-    public List<Track> getTracks ()
-    {
-        return results;
-    }
-
-    public void setTracks (List<Track> tracks)
-    {
-        this.results = tracks;
-    }
-
-    public String getTrackCount ()
-    {
-        return trackCount;
-    }
-
-    public void setTrackCount (String trackCount)
-    {
-        this.trackCount = trackCount;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [tracks = "+results+", trackCount = "+trackCount+"]";
-    }
+    public int resultCount;
 }

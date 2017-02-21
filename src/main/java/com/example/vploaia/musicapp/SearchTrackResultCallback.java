@@ -8,6 +8,6 @@ import java.util.List;
  */
 
 public interface SearchTrackResultCallback {
-    void onSearchTrackResult(List<Track> tracks); //Track
+    void onSearchTrackResult(List<Track> tracks);
 
 }
