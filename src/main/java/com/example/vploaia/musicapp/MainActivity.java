@@ -2,6 +2,7 @@ package com.example.vploaia.musicapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +15,11 @@ import android.view.View;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView listViewTracks;
 
+    TypedArray artworkUrl60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     private void setupListViewListener() {
 

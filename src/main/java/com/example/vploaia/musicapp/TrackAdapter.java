@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,6 @@ public class TrackAdapter extends ArrayAdapter<Track> {
     public TrackAdapter(Context context) {
         super(context, 0);
     }
-    
 
     @NonNull
     @Override
@@ -35,6 +37,7 @@ public class TrackAdapter extends ArrayAdapter<Track> {
             viewHolder.trackName = (TextView) view.findViewById(R.id.track_item_title);
             viewHolder.artistName = (TextView) view.findViewById(R.id.track_item_artist);
             viewHolder.trackTimeMillis = (TextView) view.findViewById(R.id.track_item_duration);
+            viewHolder.artworkUrl60 = (ImageView) view.findViewById(R.id.imageView);
             view.setTag(viewHolder);
         } else {
             view = convertView;
@@ -44,6 +47,7 @@ public class TrackAdapter extends ArrayAdapter<Track> {
         holder.trackName.setText(track.getTrackName());
         holder.artistName.setText(track.getArtistName());
         holder.trackTimeMillis.setText(track.getTrackTimeMillis());
+        Picasso.with(getContext()).load(track.getArtworkUrl60()).into(holder.artworkUrl60);
         return view;
     }
 
@@ -57,6 +61,7 @@ public class TrackAdapter extends ArrayAdapter<Track> {
         protected TextView trackName;
         protected TextView artistName;
         protected TextView trackTimeMillis;
+        protected ImageView artworkUrl60;
 
     }
 
