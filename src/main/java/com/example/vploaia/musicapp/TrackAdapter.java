@@ -9,12 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Callback;
 
 /**
  * Created by vploaia on 2/17/2017.
@@ -28,7 +24,7 @@ public class TrackAdapter extends ArrayAdapter<Track> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = null;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
@@ -42,12 +38,12 @@ public class TrackAdapter extends ArrayAdapter<Track> {
         } else {
             view = convertView;
         }
-        ViewHolder holder = (ViewHolder) view.getTag();
-        Track track = getItem(position);
+        final ViewHolder holder = (ViewHolder) view.getTag();
+        final Track track = getItem(position);
         holder.trackName.setText(track.getTrackName());
         holder.artistName.setText(track.getArtistName());
         holder.trackTimeMillis.setText(track.getTrackTimeMillis());
-        Picasso.with(getContext()).load(track.getArtworkUrl60()).into(holder.artworkUrl60);
+        Picasso.with(getContext()).load(track.getArtworkUrl60()).error(R.mipmap.ic_error_image).into(holder.artworkUrl60);
         return view;
     }
 
@@ -62,6 +58,7 @@ public class TrackAdapter extends ArrayAdapter<Track> {
         protected TextView artistName;
         protected TextView trackTimeMillis;
         protected ImageView artworkUrl60;
+
 
     }
 

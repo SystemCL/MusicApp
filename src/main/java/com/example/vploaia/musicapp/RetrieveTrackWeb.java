@@ -32,7 +32,7 @@ public class RetrieveTrackWeb extends AppCompatActivity implements TrackService 
     @Override
     public void retrieveTracks(final String searchTerm, final SearchTrackResultCallback callback) {
 
-            TracksApiEndpointInterface service = TracksApiEndpointInterface.retrofit.create(TracksApiEndpointInterface.class); //make request
+        TracksApiEndpointInterface service = TracksApiEndpointInterface.retrofit.create(TracksApiEndpointInterface.class); //make request
 
             Call<TrackResult> call = service.getTracksList(searchTerm);
 
@@ -50,6 +50,11 @@ public class RetrieveTrackWeb extends AppCompatActivity implements TrackService 
                     Log.e("E", t.getMessage(), t);
                 }
             });
+
+
+
+
     }
+
 
 }

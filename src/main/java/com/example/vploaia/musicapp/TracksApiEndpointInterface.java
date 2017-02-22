@@ -14,12 +14,14 @@ import retrofit2.http.Query;
 public interface TracksApiEndpointInterface {
 
     @GET("search")
-    Call<TrackResult> getTracksList(@Query("term") String artistName); //TrackResult
+    Call<TrackResult> getTracksList(@Query(value = "term", encoded = true) String artistName); //TrackResult
 
      Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://itunes.apple.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
+
+
 
 
 

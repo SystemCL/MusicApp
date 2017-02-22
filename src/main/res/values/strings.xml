@@ -3,4 +3,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="search_hint">Type to search music</string>
     <string name="emptyList">No items to show</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
