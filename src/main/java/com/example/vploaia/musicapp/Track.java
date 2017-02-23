@@ -8,6 +8,7 @@ import android.text.format.DateUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,7 +30,7 @@ public class Track implements Parcelable{
     @SerializedName("artworkUrl100")
     public String artworkUrl100;
 
-    public int getTrackId() { return trackId; }
+    public Integer getTrackId() { return trackId; }
 
     public void setTrackId(int trackId) { this.trackId = trackId; }
 
@@ -43,9 +44,11 @@ public class Track implements Parcelable{
 
     public String getTrackTimeMillis () {
 
-        Date dt = new Date(trackTimeMillis);
+/*        Date dt = new Date(trackTimeMillis);
         SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
         String time = sdf.format(dt);
+        return time;*/
+        String time = new SimpleDateFormat("mm:ss").format(trackTimeMillis);
         return time;
 
     }

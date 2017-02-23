@@ -3,25 +3,31 @@ package com.example.vploaia.musicapp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.TypedArray;
+import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Track> tracksAdapter;
 
     private ListView listViewTracks;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +71,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.item_local:
+                tracksAdapter.notifyDataSetChanged();
+                getTracksFromDb();
+
                 return true;
 
             case R.id.item_web:
+                tracksAdapter.notifyDataSetChanged();
                 setupSearchView();
 
                 return true;
 
             default:
-
         }
         return true;
     }
@@ -84,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapter,
                                             View item, int position, long id) {
+
 
                         Track track = tracksAdapter.getItem(position);
                         Intent intent = new Intent(MainActivity.this, TrackDetailsActivity.class);
@@ -99,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         listViewTracks.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapter, View item, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> adapter, View item, final int position, long id) {
                 final Track track = tracksAdapter.getItem(position);
                 new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog))
                         .setTitle("Alert")
@@ -108,7 +119,10 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                //deleteTrackFromLocal(position);
+                                insertTrackToDb(position);
+                                String trackFullName =  track.getArtistName() + " - " + track.getTrackName() + " saved!";
+                                Toast.makeText(getApplicationContext(),trackFullName, Toast.LENGTH_SHORT).show();
                                 ((TrackAdapter) listViewTracks.getAdapter()).remove(track);
 
                             }
@@ -156,8 +170,34 @@ public class MainActivity extends AppCompatActivity {
                 });
                 return true;
             }
+
         });
     }
+
+
+    public void insertTrackToDb(int position) {
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        Track track = tracksAdapter.getItem(position);
+        dbHandler.addTrack(track);
+
+        Log.d("Reading tracks:", "Reading all tracks..");
+        
+    }
+
+    public void getTracksFromDb(){
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        List<Track> trackList;
+        trackList = dbHandler.getAllTracks();
+        tracksAdapter.addAll(trackList);
+    }
+
+
+    public void deleteTrackFromLocal(int position){
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        Track track = tracksAdapter.getItem(position);
+        dbHandler.deleteTrack(track);
+    }
+
 
 
     public boolean isOnline() {
@@ -166,5 +206,6 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
 }
 
