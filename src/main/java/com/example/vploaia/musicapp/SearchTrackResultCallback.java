@@ -9,5 +9,4 @@ import java.util.List;
 
 public interface SearchTrackResultCallback {
     void onSearchTrackResult(List<Track> tracks);
-
 }

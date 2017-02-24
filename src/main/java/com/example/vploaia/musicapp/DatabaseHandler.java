@@ -27,6 +27,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_TRACK_TIME_MILLIS = "tracktimemillis";
     private static final String KEY_ARTWORK_URL_60 = "artworkurl60";
     private static final String KEY_ARTWORK_URL_100 = "artworkurl100";
+    private static final String KEY_ISOFFLINE = "isoffline";
 
 
     public DatabaseHandler(Context context) {
@@ -38,8 +39,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TRACKS_TABLE = "CREATE TABLE " + TABLE_TRACKS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TRACK_NAME + " TEXT,"
                 + KEY_ARTIST_NAME + " TEXT," + KEY_TRACK_TIME_MILLIS + " TIME,"
-                + KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT"
-                + ")";
+                + KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT,"
+                //+ KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT"
+                + KEY_ISOFFLINE + " TEXT" + ")";
+
         db.execSQL(CREATE_TRACKS_TABLE);
     }
 
@@ -56,11 +59,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(KEY_ID, track.getTrackId());
         values.put(KEY_TRACK_NAME, track.getTrackName());
         values.put(KEY_ARTIST_NAME, track.getArtistName());
         values.put(KEY_TRACK_TIME_MILLIS, track.getTrackTimeMillis());
         values.put(KEY_ARTWORK_URL_60, track.getArtworkUrl60());
         values.put(KEY_ARTWORK_URL_100, track.getArtworkUrl100());
+        values.put(KEY_ISOFFLINE, track.getIsOffline());
 
         db.insert(TABLE_TRACKS, null, values);
         db.close();
@@ -78,8 +83,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         Track track = new Track(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
-                                                 cursor.getString(2), cursor.getLong(3),
-                                                 cursor.getString(4), cursor.getString(5));
+                                                 cursor.getString(2), Long.parseLong(cursor.getString(3)),
+                                                 cursor.getString(4), cursor.getString(5), cursor.getString(6));
         return track;
     }
 
@@ -97,7 +102,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 track.setTrackId(Integer.parseInt(cursor.getString(0)));
                 track.setTrackName(cursor.getString(1));
                 track.setArtistName(cursor.getString(2));
-               // track.setTrackTimeMillis(Long.parseLong(String.valueOf(cursor.getLong(3))));
                 track.setTrackTimeMillis(cursor.getLong(3));
                 track.setArtworkUrl60(cursor.getString(4));
                 track.setArtworkUrl100(cursor.getString(5));
@@ -108,16 +112,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return trackList;
     }
 
-    public List<Track> getSpecificTracks(String value) {
+    public List<Track> searchTracks(String searchTerm) {
         List<Track> trackList = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + TABLE_TRACKS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery,
-                                     new String[]{"'%" + value + "%'",
-                                                  "'%" + value + "%'"
+        String whereClause1 = "trackname LIKE ";
 
-        });
+        String selectQuery = "SELECT * FROM " + TABLE_TRACKS + " WHERE " + whereClause1 + "'%"+searchTerm+"%'";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery,null);
 
         //looping through all rows and adding to list
         if(cursor.moveToFirst()) {
@@ -125,9 +128,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Track track = new Track();
                 track.setTrackName(cursor.getString(1));
                 track.setArtistName(cursor.getString(2));
-                track.setTrackTimeMillis(Long.parseLong(cursor.getString(3)));
+                track.setTrackTimeMillis(cursor.getLong(3));
+                track.setArtworkUrl60(cursor.getString(4));
+                track.setArtworkUrl100(cursor.getString(5));
                 trackList.add(track);
-            } while (cursor.moveToFirst());
+            } while (cursor.moveToNext());
         }
 
         return trackList;

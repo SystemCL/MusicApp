@@ -7,5 +7,5 @@ import java.util.List;
  */
 
 public interface TrackService {
-     public void retrieveTracks(String searchTerm, SearchTrackResultCallback callback);
+     void searchTracks(String searchTerm, SearchTrackResultCallback callback);
 }

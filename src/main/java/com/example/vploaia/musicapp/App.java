@@ -1,6 +1,7 @@
 package com.example.vploaia.musicapp;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,5 +11,4 @@ import java.util.List;
  */
 
 public class App extends Application {
-    //public static List<Track> tracks = new ArrayList<>();
 }

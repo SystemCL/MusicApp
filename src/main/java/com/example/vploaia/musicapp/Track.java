@@ -29,6 +29,7 @@ public class Track implements Parcelable{
     public String artworkUrl60;
     @SerializedName("artworkUrl100")
     public String artworkUrl100;
+    public String isOffline = "false";
 
     public Integer getTrackId() { return trackId; }
 
@@ -44,13 +45,8 @@ public class Track implements Parcelable{
 
     public String getTrackTimeMillis () {
 
-/*        Date dt = new Date(trackTimeMillis);
-        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
-        String time = sdf.format(dt);
-        return time;*/
         String time = new SimpleDateFormat("mm:ss").format(trackTimeMillis);
         return time;
-
     }
 
     public void setTrackTimeMillis (long trackTimeMillis) { this.trackTimeMillis = trackTimeMillis; }
@@ -63,15 +59,20 @@ public class Track implements Parcelable{
 
     public void setArtworkUrl100(String artworkUrl100) { this.artworkUrl100 = artworkUrl100; }
 
+    public String getIsOffline() { return isOffline; }
+
+    public void setIsOffline(String isoffline) { this.isOffline = isoffline; }
+
     public Track() { }
 
-    public Track(int trackId, String trackTitle, String artistName, long trackTimeMillis, String artworkUrl60, String artworkUrl100) {
+    public Track(int trackId, String trackTitle, String artistName, long trackTimeMillis, String artworkUrl60, String artworkUrl100, String isOffline ) {
         this.trackId = trackId;
         this.trackName = trackTitle;
         this.artistName = artistName;
         this.trackTimeMillis = trackTimeMillis;
         this.artworkUrl60 = artworkUrl60;
         this.artworkUrl100 = artworkUrl100;
+        this.isOffline = isOffline;
     }
 
    @Override
@@ -87,6 +88,7 @@ public class Track implements Parcelable{
         dest.writeLong(trackTimeMillis);
         dest.writeString(artworkUrl60);
         dest.writeString(artworkUrl100);
+        dest.writeString(isOffline);
     }
 
     protected Track(Parcel in) {
@@ -111,7 +113,7 @@ public class Track implements Parcelable{
     @Override
     public String toString()
     {
-        return "ClassPojo [id = "+trackId+", trackName = "+trackName+", artistName = "+artistName+", trackTimeMillis = "+trackTimeMillis+", artworkUrl60 = "+artworkUrl60+", artworkUrl100 = "+artworkUrl100+"]";
+        return "ClassPojo [id = "+trackId+", trackName = "+trackName+", artistName = "+artistName+", trackTimeMillis = "+trackTimeMillis+", artworkUrl60 = "+artworkUrl60+", artworkUrl100 = "+artworkUrl100+", isOffline = " +isOffline +"]";
     }
 
 

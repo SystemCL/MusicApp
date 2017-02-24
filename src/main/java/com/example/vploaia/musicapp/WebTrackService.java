@@ -1,17 +1,7 @@
 package com.example.vploaia.musicapp;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,21 +11,23 @@ import retrofit2.Response;
  * Created by vploaia on 2/20/2017.
  */
 
-public class RetrieveTrackWeb extends AppCompatActivity implements TrackService {
+public class WebTrackService implements TrackService {
 
-    private static TrackService instance = new RetrieveTrackWeb();
+    private static TrackService instance = new WebTrackService();
+    private TracksApiEndpointInterface service;
+
+    private WebTrackService() {
+        service = TracksApiEndpointInterface.retrofit.create(TracksApiEndpointInterface.class);
+    }
 
     public static TrackService getInstance() {
         return instance;
     }
 
     @Override
-    public void retrieveTracks(final String searchTerm, final SearchTrackResultCallback callback) {
-
-        TracksApiEndpointInterface service = TracksApiEndpointInterface.retrofit.create(TracksApiEndpointInterface.class); //make request
+    public void searchTracks(final String searchTerm, final SearchTrackResultCallback callback) {
 
             Call<TrackResult> call = service.getTracksList(searchTerm);
-
             call.enqueue(new Callback<TrackResult>() {
                 @Override
                 public void onResponse(Call<TrackResult> call, Response<TrackResult> response) {

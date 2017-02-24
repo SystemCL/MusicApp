@@ -25,34 +25,6 @@ public class TrackDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_details);
 
-        /*TrackDetailsActivity.data =
-
-        Bundle extras = getIntent().getExtras();
-
-        String trackName = extras.getString("trackName");
-        String artistName = extras.getString("artistName");
-        String trackTimeMillis = extras.getString("trackTimeMillis");
-
-        TextView trackNameTextView = (TextView) findViewById(R.id.trackName);
-        trackNameTextView.setText(trackName);
-        TextView artistNameTextView = (TextView) findViewById(R.id.artistName);
-        artistNameTextView.setText(artistName);
-        TextView trackTimeMillisTextView = (TextView) findViewById(R.id.trackTimeMillis);
-        trackTimeMillisTextView.setText(trackTimeMillis);*/
-
-/*        Intent intent = getIntent();
-        String trackName = intent.getStringExtra("trackName");
-        String artistName = intent.getStringExtra("artistName");
-        String trackTimeMillis = intent.getStringExtra("trackTimeMillis");
-
-
-        TextView trackNameTextView = (TextView) findViewById(R.id.trackName);
-        trackNameTextView.setText(trackName);
-        TextView artistNameTextView = (TextView) findViewById(R.id.artistName);
-        artistNameTextView.setText(artistName);
-        TextView trackTimeMillisTextView = (TextView) findViewById(R.id.trackTimeMillis);
-        trackTimeMillisTextView.setText(trackTimeMillis);*/
-
         int sync = getIntent().getIntExtra("bigdata:synccode", -1);
         final Track bigData = ResultIPC.get().getLargeData(sync);
         TextView trackNameTextView = (TextView) findViewById(R.id.trackName);
@@ -62,7 +34,11 @@ public class TrackDetailsActivity extends AppCompatActivity {
         TextView trackTimeMillisTextView = (TextView) findViewById(R.id.trackTimeMillis);
         trackTimeMillisTextView.setText(bigData.getTrackTimeMillis());
         ImageView fullImageView = (ImageView) findViewById(R.id.fullImage);
-        Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);
+        if(bigData.getIsOffline() != "true") {
+            Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);
+        } else {
+            Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).networkPolicy(NetworkPolicy.OFFLINE).into(fullImageView);
+        }
 
 
 
