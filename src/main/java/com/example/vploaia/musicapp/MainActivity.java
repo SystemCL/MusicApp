@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -61,15 +62,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.item_local:
                 trackService = new LocalTrackService(this);
-                return true;
+                break;
 
             case R.id.item_web:
                 trackService = WebTrackService.getInstance();
-                return true;
+                break;
         }
         return true;
     }
@@ -97,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View item, final int position, long id) {
                 final Track track = tracksAdapter.getItem(position);
+                final DatabaseHandler dbHandler = new DatabaseHandler(MainActivity.this);
+                final List<Track> trackList1;
+                trackList1 = dbHandler.searchSingleTrack(tracksAdapter.getItem(position).getArtistName());
                 new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog))
                         .setTitle("Alert")
                         .setMessage("Do you like to save the track info on device ?")
@@ -105,19 +109,21 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //deleteTrackFromLocal(position);
-                                if(track.getIsOffline() == "true"){
+                                //trackList1.get(0).isOffline == true && trackList1.get(0).getTrackName() != null
+                                if (trackList1.size() != 0) {
                                     deleteTrackFromLocal(position);
                                     Log.d("Track infos: ", track.toString());
                                 } else {
                                     insertTrackToDb(position);
                                     ((TrackAdapter) listViewTracks.getAdapter()).remove(track);
                                 }
+
                             }
+
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
 
                             }
                         })
@@ -162,21 +168,19 @@ public class MainActivity extends AppCompatActivity {
     public void insertTrackToDb(int position) {
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         Track track = tracksAdapter.getItem(position);
-        //track.isOffline = "true";
-        tracksAdapter.getItem(position).setIsOffline("true");
+        tracksAdapter.getItem(position).setOffline(true);
         dbHandler.addTrack(track);
-        String trackFullName =  track.getArtistName() + " - " + track.getTrackName() + " saved!";
-        Toast.makeText(getApplicationContext(),trackFullName, Toast.LENGTH_SHORT).show();
+        String trackFullName = track.getArtistName() + " - " + track.getTrackName() + " saved!";
+        Toast.makeText(getApplicationContext(), trackFullName, Toast.LENGTH_SHORT).show();
 
 
     }
 
-    public void deleteTrackFromLocal(int position){
+    public void deleteTrackFromLocal(int position) {
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         Track track = tracksAdapter.getItem(position);
         dbHandler.deleteTrack(track);
     }
-
 
 
     public boolean isOnline() {
@@ -184,6 +188,10 @@ public class MainActivity extends AppCompatActivity {
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public void getTrackIsOfflineStatus(int position) {
+
     }
 
 }

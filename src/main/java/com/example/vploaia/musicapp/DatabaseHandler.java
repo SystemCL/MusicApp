@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ARTIST_NAME + " TEXT," + KEY_TRACK_TIME_MILLIS + " TIME,"
                 + KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT,"
                 //+ KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT"
-                + KEY_ISOFFLINE + " TEXT" + ")";
+                + KEY_ISOFFLINE + " BIT" + ")";
 
         db.execSQL(CREATE_TRACKS_TABLE);
     }
@@ -65,28 +66,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TRACK_TIME_MILLIS, track.getTrackTimeMillis());
         values.put(KEY_ARTWORK_URL_60, track.getArtworkUrl60());
         values.put(KEY_ARTWORK_URL_100, track.getArtworkUrl100());
-        values.put(KEY_ISOFFLINE, track.getIsOffline());
+        values.put(KEY_ISOFFLINE, track.isOffline());
 
         db.insert(TABLE_TRACKS, null, values);
         db.close();
     }
 
-    public Track getTrack(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_TRACKS, new String[] {KEY_ID,
-                  KEY_TRACK_NAME, KEY_ARTIST_NAME, KEY_TRACK_TIME_MILLIS,
-                  KEY_ARTWORK_URL_60, KEY_ARTWORK_URL_100}, KEY_ID + "=?",
-                  new String[] {String.valueOf(id)}, null, null, null, null);
-
-        if(cursor != null)
-            cursor.moveToFirst();
-
-        Track track = new Track(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
-                                                 cursor.getString(2), Long.parseLong(cursor.getString(3)),
-                                                 cursor.getString(4), cursor.getString(5), cursor.getString(6));
-        return track;
-    }
+//    public Track getTrack(int id) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        Cursor cursor = db.query(TABLE_TRACKS, new String[]{KEY_ID,
+//                        KEY_TRACK_NAME, KEY_ARTIST_NAME, KEY_TRACK_TIME_MILLIS,
+//                        KEY_ARTWORK_URL_60, KEY_ARTWORK_URL_100}, KEY_ID + "=?",
+//                new String[]{String.valueOf(id)}, null, null, null, null);
+//
+//        if (cursor != null)
+//            cursor.moveToFirst();
+//
+//        Track track = new Track(Integer.parseInt(cursor.getString(0)), cursor.getString(1),
+//                cursor.getString(2), Long.parseLong(cursor.getString(3)),
+//                cursor.getString(4), cursor.getString(5), cursor.getString(6));
+//        return track;
+//    }
 
     public List<Track> getAllTracks() {
         List<Track> trackList = new ArrayList<>();
@@ -96,7 +97,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         //looping through all rows and adding to list
         Track track = null;
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 track = new Track();
                 track.setTrackId(Integer.parseInt(cursor.getString(0)));
@@ -117,20 +118,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String whereClause1 = "trackname LIKE ";
 
-        String selectQuery = "SELECT * FROM " + TABLE_TRACKS + " WHERE " + whereClause1 + "'%"+searchTerm+"%'";
+        String selectQuery = "SELECT * FROM " + TABLE_TRACKS + " WHERE " + whereClause1 + "'%" + searchTerm + "%'";
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery(selectQuery,null);
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         //looping through all rows and adding to list
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 Track track = new Track();
-                track.setTrackName(cursor.getString(1));
-                track.setArtistName(cursor.getString(2));
-                track.setTrackTimeMillis(cursor.getLong(3));
-                track.setArtworkUrl60(cursor.getString(4));
-                track.setArtworkUrl100(cursor.getString(5));
+                track.setTrackName(cursor.getString(cursor.getColumnIndex(KEY_TRACK_NAME)));
+                track.setArtistName(cursor.getString(cursor.getColumnIndex(KEY_ARTIST_NAME)));
+                track.setTrackTimeMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRACK_TIME_MILLIS)));
+                track.setArtworkUrl60(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_60)));
+                track.setArtworkUrl100(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_100)));
+                track.setOffline(cursor.getInt(cursor.getColumnIndex(KEY_ISOFFLINE)) != 0);
                 trackList.add(track);
             } while (cursor.moveToNext());
         }
@@ -138,10 +140,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return trackList;
     }
 
+    public List<Track> searchSingleTrack(String searchTerm) {
+        List<Track> trackList1 = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_TRACKS, new String[]{KEY_ID,
+                KEY_TRACK_NAME, KEY_ARTIST_NAME, KEY_TRACK_TIME_MILLIS,
+                KEY_ARTWORK_URL_60, KEY_ARTWORK_URL_100, KEY_ISOFFLINE}, KEY_TRACK_NAME + "=?", new String[]{searchTerm}, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do {
+                Track track = new Track();
+                track.setTrackName(cursor.getString(cursor.getColumnIndex(KEY_TRACK_NAME)));
+                track.setArtistName(cursor.getString(cursor.getColumnIndex(KEY_ARTIST_NAME)));
+                track.setTrackTimeMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRACK_TIME_MILLIS)));
+                track.setArtworkUrl60(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_60)));
+                track.setArtworkUrl100(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_100)));
+                track.setOffline(cursor.getInt(cursor.getColumnIndex(KEY_ISOFFLINE)) != 0);
+                trackList1.add(track);
+            }
+            while (cursor.moveToNext());
+
+
+        }
+            return trackList1;
+
+    }
+
     public void deleteTrack(Track track) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TRACKS, KEY_ID + " = ?",
-                 new String[] {String.valueOf(track.getTrackId())});
+                new String[]{String.valueOf(track.getTrackId())});
         db.close();
     }
 

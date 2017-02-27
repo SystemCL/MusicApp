@@ -1,20 +1,14 @@
 package com.example.vploaia.musicapp;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.Image;
-import android.net.Uri;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
 
 public class TrackDetailsActivity extends AppCompatActivity {
 
@@ -34,11 +28,11 @@ public class TrackDetailsActivity extends AppCompatActivity {
         TextView trackTimeMillisTextView = (TextView) findViewById(R.id.trackTimeMillis);
         trackTimeMillisTextView.setText(bigData.getTrackTimeMillis());
         ImageView fullImageView = (ImageView) findViewById(R.id.fullImage);
-        if(bigData.getIsOffline() != "true") {
+       // if(bigData.getIsOffline() != "true") {
             Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);
-        } else {
-            Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).networkPolicy(NetworkPolicy.OFFLINE).into(fullImageView);
-        }
+      //  } else {
+     //       Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).networkPolicy(NetworkPolicy.OFFLINE).into(fullImageView);
+     //   }
 
 
 

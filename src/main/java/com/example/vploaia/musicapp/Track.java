@@ -16,7 +16,7 @@ import java.util.Date;
  * Created by vploaia on 2/17/2017.
  */
 
-public class Track implements Parcelable{
+public class Track {
 
     public int trackId;
     @SerializedName("trackName")
@@ -29,7 +29,7 @@ public class Track implements Parcelable{
     public String artworkUrl60;
     @SerializedName("artworkUrl100")
     public String artworkUrl100;
-    public String isOffline = "false";
+    public boolean isOffline;
 
     public Integer getTrackId() { return trackId; }
 
@@ -59,13 +59,15 @@ public class Track implements Parcelable{
 
     public void setArtworkUrl100(String artworkUrl100) { this.artworkUrl100 = artworkUrl100; }
 
-    public String getIsOffline() { return isOffline; }
+    public boolean isOffline() {
+        return isOffline;
+    }
 
-    public void setIsOffline(String isoffline) { this.isOffline = isoffline; }
+    public void setOffline(boolean isoffline) { this.isOffline = isoffline; }
 
     public Track() { }
 
-    public Track(int trackId, String trackTitle, String artistName, long trackTimeMillis, String artworkUrl60, String artworkUrl100, String isOffline ) {
+    public Track(int trackId, String trackTitle, String artistName, long trackTimeMillis, String artworkUrl60, String artworkUrl100, boolean isOffline ) {
         this.trackId = trackId;
         this.trackName = trackTitle;
         this.artistName = artistName;
@@ -75,50 +77,11 @@ public class Track implements Parcelable{
         this.isOffline = isOffline;
     }
 
-   @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(trackId);
-        dest.writeString(trackName);
-        dest.writeString(artistName);
-        dest.writeLong(trackTimeMillis);
-        dest.writeString(artworkUrl60);
-        dest.writeString(artworkUrl100);
-        dest.writeString(isOffline);
-    }
-
-    protected Track(Parcel in) {
-        this.trackId = in.readInt();
-        this.trackName = in.readString();
-        this.artistName = in.readString();
-        this.trackTimeMillis = in.readLong();
-        this.artworkUrl60 = in.readString();
-        this.artworkUrl100 = in.readString();
-    }
-
-    public static final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
-
-        @Override
-        public Track createFromParcel(Parcel in) { return new Track(in); }
-
-        @Override
-        public Track[] newArray(int size) { return new Track[size]; }
-
-    };
-
     @Override
     public String toString()
     {
         return "ClassPojo [id = "+trackId+", trackName = "+trackName+", artistName = "+artistName+", trackTimeMillis = "+trackTimeMillis+", artworkUrl60 = "+artworkUrl60+", artworkUrl100 = "+artworkUrl100+", isOffline = " +isOffline +"]";
     }
-
-
-
-
 
 
 }
