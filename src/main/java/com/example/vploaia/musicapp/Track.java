@@ -17,7 +17,6 @@ import java.util.Date;
  */
 
 public class Track {
-
     public int trackId;
     @SerializedName("trackName")
     public String trackName;
@@ -30,6 +29,8 @@ public class Track {
     @SerializedName("artworkUrl100")
     public String artworkUrl100;
     public boolean isOffline;
+
+    public double rateTrack;
 
     public Integer getTrackId() { return trackId; }
 
@@ -45,8 +46,10 @@ public class Track {
 
     public String getTrackTimeMillis () {
 
-        String time = new SimpleDateFormat("mm:ss").format(trackTimeMillis);
-        return time;
+           // String value = trackTimeMillis;
+            String time = new SimpleDateFormat("mm:ss").format(trackTimeMillis);
+            return time;
+
     }
 
     public void setTrackTimeMillis (long trackTimeMillis) { this.trackTimeMillis = trackTimeMillis; }
@@ -59,11 +62,15 @@ public class Track {
 
     public void setArtworkUrl100(String artworkUrl100) { this.artworkUrl100 = artworkUrl100; }
 
-    public boolean isOffline() {
+    public boolean getIsOffline() {
         return isOffline;
     }
 
     public void setOffline(boolean isoffline) { this.isOffline = isoffline; }
+
+    public double getRateTrack() { return rateTrack; }
+
+    public void setRateTrack(double rateTrack) { this.rateTrack = rateTrack; }
 
     public Track() { }
 

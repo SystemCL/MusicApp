@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -98,38 +99,53 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View item, final int position, long id) {
                 final Track track = tracksAdapter.getItem(position);
-                final DatabaseHandler dbHandler = new DatabaseHandler(MainActivity.this);
-                final List<Track> trackList1;
-                trackList1 = dbHandler.searchSingleTrack(tracksAdapter.getItem(position).getArtistName());
-                new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog))
-                        .setTitle("Alert")
-                        .setMessage("Do you like to save the track info on device ?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //deleteTrackFromLocal(position);
-                                //trackList1.get(0).isOffline == true && trackList1.get(0).getTrackName() != null
-                                if (trackList1.size() != 0) {
-                                    deleteTrackFromLocal(position);
-                                    Log.d("Track infos: ", track.toString());
-                                } else {
+                if (tracksAdapter.getItem(position).isOffline != false) {
+                    new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog))
+                            .setTitle("Alert")
+                            .setMessage("Do you want to delete the track info from device ?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ((TrackAdapter) listViewTracks.getAdapter()).remove(track);
+                                    deleteTrackFromLocal(track.getTrackName(), track.getArtistName());
+
+                                }
+
+                            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                } else {
+
+                    new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.myDialog))
+                            .setTitle("Alert")
+                            .setMessage("Do you like to save the track info on device ?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
                                     insertTrackToDb(position);
                                     ((TrackAdapter) listViewTracks.getAdapter()).remove(track);
                                 }
 
-                            }
 
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
+                        }
+                    })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
 
                 return true;
             }
@@ -153,7 +169,14 @@ public class MainActivity extends AppCompatActivity {
                 trackService.searchTracks(query, new SearchTrackResultCallback() {
                     @Override
                     public void onSearchTrackResult(List<Track> tracks) {
-
+                        TextView emptyListTextView = (TextView) findViewById(R.id.empty_list_item);
+                        if(tracks.isEmpty()){
+                            emptyListTextView.setVisibility(View.VISIBLE);
+                            emptyListTextView.setTextSize(30);
+                            emptyListTextView.setText("No such items found");
+                        } else {
+                            emptyListTextView.setVisibility(View.GONE);
+                        }
                         tracksAdapter.clear();
                         tracksAdapter.addAll(tracks);
                         tracksAdapter.notifyDataSetChanged();
@@ -176,22 +199,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void deleteTrackFromLocal(int position) {
+    public void deleteTrackFromLocal(String trackName, String artistName) {
         DatabaseHandler dbHandler = new DatabaseHandler(this);
-        Track track = tracksAdapter.getItem(position);
-        dbHandler.deleteTrack(track);
+        dbHandler.deleteTrack(trackName, artistName);
     }
-
 
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    public void getTrackIsOfflineStatus(int position) {
-
     }
 
 }

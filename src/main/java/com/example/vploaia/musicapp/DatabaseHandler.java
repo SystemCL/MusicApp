@@ -29,6 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ARTWORK_URL_60 = "artworkurl60";
     private static final String KEY_ARTWORK_URL_100 = "artworkurl100";
     private static final String KEY_ISOFFLINE = "isoffline";
+    private static final String KEY_RATE = "rate";
 
 
     public DatabaseHandler(Context context) {
@@ -39,10 +40,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TRACKS_TABLE = "CREATE TABLE " + TABLE_TRACKS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TRACK_NAME + " TEXT,"
-                + KEY_ARTIST_NAME + " TEXT," + KEY_TRACK_TIME_MILLIS + " TIME,"
+                + KEY_ARTIST_NAME + " TEXT," + KEY_TRACK_TIME_MILLIS + " TEXT,"
                 + KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT,"
-                //+ KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT"
-                + KEY_ISOFFLINE + " BIT" + ")";
+                + KEY_ISOFFLINE + " BIT," + KEY_RATE +" REAL" + ")";
 
         db.execSQL(CREATE_TRACKS_TABLE);
     }
@@ -63,10 +63,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_ID, track.getTrackId());
         values.put(KEY_TRACK_NAME, track.getTrackName());
         values.put(KEY_ARTIST_NAME, track.getArtistName());
-        values.put(KEY_TRACK_TIME_MILLIS, track.getTrackTimeMillis());
+        values.put(KEY_TRACK_TIME_MILLIS, track.getTrackTimeMillis().toString());
         values.put(KEY_ARTWORK_URL_60, track.getArtworkUrl60());
         values.put(KEY_ARTWORK_URL_100, track.getArtworkUrl100());
-        values.put(KEY_ISOFFLINE, track.isOffline());
+        values.put(KEY_ISOFFLINE, track.getIsOffline());
+        values.put(KEY_RATE, track.getRateTrack());
 
         db.insert(TABLE_TRACKS, null, values);
         db.close();
@@ -133,6 +134,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 track.setArtworkUrl60(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_60)));
                 track.setArtworkUrl100(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_100)));
                 track.setOffline(cursor.getInt(cursor.getColumnIndex(KEY_ISOFFLINE)) != 0);
+                track.setRateTrack(cursor.getFloat(cursor.getColumnIndex(KEY_RATE)));
                 trackList.add(track);
             } while (cursor.moveToNext());
         }
@@ -140,37 +142,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return trackList;
     }
 
-    public List<Track> searchSingleTrack(String searchTerm) {
-        List<Track> trackList1 = new ArrayList<>();
+    public void updateTrack(Track track) {
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_TRACKS, new String[]{KEY_ID,
-                KEY_TRACK_NAME, KEY_ARTIST_NAME, KEY_TRACK_TIME_MILLIS,
-                KEY_ARTWORK_URL_60, KEY_ARTWORK_URL_100, KEY_ISOFFLINE}, KEY_TRACK_NAME + "=?", new String[]{searchTerm}, null, null, null, null);
-        if(cursor.moveToFirst()){
-            do {
-                Track track = new Track();
-                track.setTrackName(cursor.getString(cursor.getColumnIndex(KEY_TRACK_NAME)));
-                track.setArtistName(cursor.getString(cursor.getColumnIndex(KEY_ARTIST_NAME)));
-                track.setTrackTimeMillis(cursor.getLong(cursor.getColumnIndex(KEY_TRACK_TIME_MILLIS)));
-                track.setArtworkUrl60(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_60)));
-                track.setArtworkUrl100(cursor.getString(cursor.getColumnIndex(KEY_ARTWORK_URL_100)));
-                track.setOffline(cursor.getInt(cursor.getColumnIndex(KEY_ISOFFLINE)) != 0);
-                trackList1.add(track);
-            }
-            while (cursor.moveToNext());
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put(KEY_TRACK_NAME, track.getRateTrack());
+        values.put(KEY_ARTIST_NAME, track.getArtistName());
+        values.put(KEY_TRACK_TIME_MILLIS, track.getTrackTimeMillis());
+        values.put(KEY_ARTWORK_URL_60, track.getArtworkUrl60());
+        values.put(KEY_ARTWORK_URL_100, track.getArtworkUrl100());
+        values.put(KEY_ISOFFLINE, track.getIsOffline());
+        values.put(KEY_RATE, track.getRateTrack());
 
-        }
-            return trackList1;
-
+        db.update(TABLE_TRACKS, values, KEY_TRACK_NAME + "= ? AND " + KEY_ARTIST_NAME + " = ?"
+                , new String[] { String.valueOf(track.trackName), String.valueOf(track.artistName) });
+        db.close();
+        Log.d("updated", track.trackName + "was updated");
     }
 
-    public void deleteTrack(Track track) {
+
+    public void deleteTrack(String trackName, String artistName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_TRACKS, KEY_ID + " = ?",
-                new String[]{String.valueOf(track.getTrackId())});
+        db.delete(TABLE_TRACKS, KEY_TRACK_NAME + " = ? AND " + KEY_ARTIST_NAME + " = ?",
+                new String[]{String.valueOf(trackName), String.valueOf(artistName)});
         db.close();
+        Log.d("deleted", trackName + "was deleted");
+
     }
 
 
