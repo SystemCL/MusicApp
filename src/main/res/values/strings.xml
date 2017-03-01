@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MusicAppFragments</string>
+    <string name="search_hint">Type to search music</string>
+    <string name="emptyList">No items to show</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="title_activity_item_detail">TrackDetail</string>
+</resources>

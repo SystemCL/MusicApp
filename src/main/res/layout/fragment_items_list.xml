@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_items_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/list_items"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/white"
+        android:fitsSystemWindows="true"
+        android:background="?attr/colorPrimary">
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_white_rounded"
+        android:hint="@string/search_hint"
+        android:orientation="vertical"
+        android:textAlignment="textStart"
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/empty_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_view"
+        android:text="@string/emptyList"
+        android:visibility="gone"
+        android:textSize="22sp" />
+
+
+</RelativeLayout>
