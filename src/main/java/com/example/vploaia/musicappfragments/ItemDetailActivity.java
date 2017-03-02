@@ -1,5 +1,6 @@
 package com.example.vploaia.musicappfragments;
 
+import android.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
@@ -33,5 +34,9 @@ public class ItemDetailActivity extends FragmentActivity {
             fragmentTransaction.commit();
 
         }
+
     }
+
+
+
 }

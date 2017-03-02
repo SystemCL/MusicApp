@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.vploaia.musicapp.R;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -18,17 +19,18 @@ import com.squareup.picasso.Picasso;
 
 public class ItemDetailFragment extends Fragment {
 
-    private Track track;
+    public Track track;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        track = (Track) getArguments().getSerializable("track");
+        //  track = (Track) getArguments().getSerializable("track");
+
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //Attach the view for detail
         View view = inflater.inflate(R.layout.fragment_item_detail, container, false);
@@ -37,28 +39,23 @@ public class ItemDetailFragment extends Fragment {
         TextView artistNameTextView = (TextView) view.findViewById(R.id.artistName);
         artistNameTextView.setText(track.getArtistName());
         TextView trackTimeMillisTextView = (TextView) view.findViewById(R.id.trackTimeMillis);
-        trackTimeMillisTextView.setText(track.getTrackTimeMillis().toString());
+        trackTimeMillisTextView.setText(String.valueOf(track.getTrackTimeMillisConverted()));
         ImageView fullImageView = (ImageView) view.findViewById(R.id.fullImage);
-        // if(bigData.getIsOffline() != "true") {
-        Picasso.with(getActivity()).load(track.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);
-        //  } else {
-        //       Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).networkPolicy(NetworkPolicy.OFFLINE).into(fullImageView);
-        //   }
+        if (track.isOffline == true) {
+            Picasso.with(getActivity()).load(track.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);
+        } else {
+            Picasso.with(getActivity()).load(track.getArtworkUrl100()).networkPolicy(NetworkPolicy.OFFLINE).into(fullImageView);
+        }
 
         return view;
     }
 
     public static ItemDetailFragment newInstance(Track track) {
         ItemDetailFragment itemDetailFragment = new ItemDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("track", track);
-        itemDetailFragment.setArguments(args);
+        itemDetailFragment.track = track;
         return itemDetailFragment;
 
     }
-
-
-
 
 
 }

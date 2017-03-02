@@ -41,7 +41,7 @@ public class TrackAdapter extends ArrayAdapter<Track> {
         final Track track = getItem(position);
         holder.trackName.setText(track.getTrackName());
         holder.artistName.setText(track.getArtistName());
-        holder.trackTimeMillis.setText(track.getTrackTimeMillis().toString());
+        holder.trackTimeMillis.setText(String.valueOf(track.getTrackTimeMillisConverted()));
         Picasso.with(getContext()).load(track.getArtworkUrl60()).error(R.mipmap.ic_error_image).into(holder.artworkUrl60);
         return view;
     }

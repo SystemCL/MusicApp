@@ -3,9 +3,12 @@ package com.example.vploaia.musicappfragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
@@ -88,6 +91,7 @@ public class ItemsListFragment extends Fragment {
                 break;
 
             case R.id.item_web:
+                showSnackbarInternetStatus();
                 trackService = WebTrackService.getInstance();
                 break;
         }
@@ -110,15 +114,17 @@ public class ItemsListFragment extends Fragment {
         searchView.setSubmitButtonEnabled(true);
         searchView.setQueryHint("Search Here");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextChange(String newText) {
+
+                TextView view = (TextView) getView().findViewById(R.id.empty_list_item);
+                view.setVisibility(View.GONE);
                 return true;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-
                 trackService.searchTracks(query, new SearchTrackResultCallback() {
                     @Override
                     public void onSearchTrackResult(List<Track> tracks) {
@@ -195,6 +201,7 @@ public class ItemsListFragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     insertTrackToDb(position);
+
                                     ((TrackAdapter) listViewTracks.getAdapter()).remove(track);
                                 }
 
@@ -241,5 +248,22 @@ public class ItemsListFragment extends Fragment {
                         : ListView.CHOICE_MODE_NONE);
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void showSnackbarInternetStatus(){
+        if(isNetworkAvailable() == false) {
+
+            ListView view = (ListView) getView().findViewById(R.id.list_items);
+            view.setVisibility(View.GONE);
+            final View viewPos = getActivity().findViewById(R.id.myCoordinatorLayout);
+            Snackbar snackbar = Snackbar.make(viewPos, "No internet connection", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
 
 }

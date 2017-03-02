@@ -3,7 +3,9 @@ package com.example.vploaia.musicappfragments;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by vploaia on 3/1/2017.
@@ -11,7 +13,6 @@ import java.text.SimpleDateFormat;
 
 public class Track implements Serializable {
 
-    private static final long serialVersionUID = -1213949467658913456L;
     public int trackId;
     @SerializedName("trackName")
     public String trackName;
@@ -40,7 +41,7 @@ public class Track implements Serializable {
 
     public void setArtistName (String artistName) { this.artistName = artistName; }
 
-    public String getTrackTimeMillis () {
+/*    public String getTrackTimeMillis () {
 
         //String value = trackTimeMillis;
         //String time = new SimpleDateFormat("mm:ss").format(Long.parseLong(value));
@@ -48,6 +49,16 @@ public class Track implements Serializable {
         return time;
 
 
+    }*/
+
+    public long getTrackTimeMillis() {
+        return trackTimeMillis;
+    }
+
+    public String getTrackTimeMillisConverted() {
+        String hms = String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(trackTimeMillis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(trackTimeMillis)),
+                TimeUnit.MILLISECONDS.toSeconds(trackTimeMillis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(trackTimeMillis)));
+        return hms;
     }
 
     public void setTrackTimeMillis (long trackTimeMillis) { this.trackTimeMillis = trackTimeMillis; }

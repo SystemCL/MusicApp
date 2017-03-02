@@ -24,7 +24,6 @@ import com.example.vploaia.musicappfragments.ItemsListFragment.OnListItemSelecte
 
 public class ItemsListActivity extends AppCompatActivity implements OnListItemSelectedListener {
     private boolean isTwoPane = false;
-    private TrackService trackService = WebTrackService.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

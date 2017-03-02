@@ -39,7 +39,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TRACKS_TABLE = "CREATE TABLE " + TABLE_TRACKS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TRACK_NAME + " TEXT,"
-                + KEY_ARTIST_NAME + " TEXT," + KEY_TRACK_TIME_MILLIS + " TEXT,"
+                + KEY_ARTIST_NAME + " TEXT," + KEY_TRACK_TIME_MILLIS + " INTEGER,"
                 + KEY_ARTWORK_URL_60 + " TEXT," + KEY_ARTWORK_URL_100 + " TEXT,"
                 + KEY_ISOFFLINE + " BIT," + KEY_RATE +" REAL" + ")";
 
