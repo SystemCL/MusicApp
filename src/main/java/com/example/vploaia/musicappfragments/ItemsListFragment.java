@@ -11,6 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -64,12 +67,39 @@ public class ItemsListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_local:
+                trackService = new LocalTrackService(getContext());
+                break;
+
+            case R.id.item_web:
+                trackService = WebTrackService.getInstance();
+                break;
+        }
+        return true;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_items_list, container, false);
         listViewTracks = (ListView) view.findViewById(R.id.list_items);
-
         registerForContextMenu(listViewTracks);
         listViewTracks.setAdapter(tracksAdapter);
 
@@ -87,6 +117,8 @@ public class ItemsListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+
                 trackService.searchTracks(query, new SearchTrackResultCallback() {
                     @Override
                     public void onSearchTrackResult(List<Track> tracks) {
@@ -182,7 +214,6 @@ public class ItemsListFragment extends Fragment {
             }
         });
     }
-
 
 
     public void insertTrackToDb(int position) {

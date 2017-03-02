@@ -1,5 +1,6 @@
 package com.example.vploaia.musicappfragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,8 +9,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.example.vploaia.musicapp.R;
@@ -21,7 +24,7 @@ import com.example.vploaia.musicappfragments.ItemsListFragment.OnListItemSelecte
 
 public class ItemsListActivity extends AppCompatActivity implements OnListItemSelectedListener {
     private boolean isTwoPane = false;
-    public TrackService trackService = WebTrackService.getInstance();
+    private TrackService trackService = WebTrackService.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,26 +39,6 @@ public class ItemsListActivity extends AppCompatActivity implements OnListItemSe
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_local:
-                trackService = new LocalTrackService(ItemsListActivity.this);
-                break;
-
-            case R.id.item_web:
-                trackService = WebTrackService.getInstance();
-                break;
-        }
-        return true;
-    }
-
     private void determinePaneLayout() {
         FrameLayout fragmentItemDetail = (FrameLayout) findViewById(R.id.activity_item_detail_container);
         if (fragmentItemDetail != null) {
@@ -69,7 +52,6 @@ public class ItemsListActivity extends AppCompatActivity implements OnListItemSe
     @Override
     public void onItemSelected(Track track) {
         if (isTwoPane) { // single activity with list and detail
-            // Replace frame layout with correct detail fragment
             ItemDetailFragment fragmentItem = ItemDetailFragment.newInstance(track);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.activity_item_detail_container, fragmentItem);
@@ -81,6 +63,8 @@ public class ItemsListActivity extends AppCompatActivity implements OnListItemSe
             startActivity(i);
         }
     }
+
+
 
 
 }
