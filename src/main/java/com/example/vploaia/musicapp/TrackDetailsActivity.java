@@ -38,7 +38,7 @@ public class TrackDetailsActivity extends AppCompatActivity {
         TextView artistNameTextView = (TextView) findViewById(R.id.artistName);
         artistNameTextView.setText(bigData.getArtistName());
         TextView trackTimeMillisTextView = (TextView) findViewById(R.id.trackTimeMillis);
-        trackTimeMillisTextView.setText(bigData.getTrackTimeMillis());
+        trackTimeMillisTextView.setText(String.valueOf(bigData.getTrackTimeMillisConverted()));
         ImageView fullImageView = (ImageView) findViewById(R.id.fullImage);
         // if(bigData.getIsOffline() != "true") {
         Picasso.with(TrackDetailsActivity.this).load(bigData.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);

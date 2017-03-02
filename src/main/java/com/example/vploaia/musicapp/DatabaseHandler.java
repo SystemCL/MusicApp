@@ -63,7 +63,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_ID, track.getTrackId());
         values.put(KEY_TRACK_NAME, track.getTrackName());
         values.put(KEY_ARTIST_NAME, track.getArtistName());
-        values.put(KEY_TRACK_TIME_MILLIS, track.getTrackTimeMillis().toString());
+        values.put(KEY_TRACK_TIME_MILLIS, track.getTrackTimeMillis());
         values.put(KEY_ARTWORK_URL_60, track.getArtworkUrl60());
         values.put(KEY_ARTWORK_URL_100, track.getArtworkUrl100());
         values.put(KEY_ISOFFLINE, track.getIsOffline());

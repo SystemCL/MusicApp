@@ -12,6 +12,8 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.text.format.DateFormat.getDateFormat;
+
 /**
  * Created by vploaia on 2/17/2017.
  */
@@ -44,12 +46,14 @@ public class Track {
 
     public void setArtistName (String artistName) { this.artistName = artistName; }
 
-    public String getTrackTimeMillis () {
+    public long getTrackTimeMillis() {
+        return trackTimeMillis;
+    }
 
-           // String value = trackTimeMillis;
-            String time = new SimpleDateFormat("mm:ss").format(trackTimeMillis);
-            return time;
-
+    public String getTrackTimeMillisConverted() {
+        String hms = String.format("%02d:%02d", java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(trackTimeMillis) - java.util.concurrent.TimeUnit.HOURS.toMinutes(java.util.concurrent.TimeUnit.MILLISECONDS.toHours(trackTimeMillis)),
+                java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds(trackTimeMillis) - java.util.concurrent.TimeUnit.MINUTES.toSeconds(java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(trackTimeMillis)));
+        return hms;
     }
 
     public void setTrackTimeMillis (long trackTimeMillis) { this.trackTimeMillis = trackTimeMillis; }
@@ -74,7 +78,7 @@ public class Track {
 
     public Track() { }
 
-    public Track(int trackId, String trackTitle, String artistName, long trackTimeMillis, String artworkUrl60, String artworkUrl100, boolean isOffline ) {
+    public Track(int trackId, String trackTitle, String artistName, Long trackTimeMillis, String artworkUrl60, String artworkUrl100, boolean isOffline ) {
         this.trackId = trackId;
         this.trackName = trackTitle;
         this.artistName = artistName;
