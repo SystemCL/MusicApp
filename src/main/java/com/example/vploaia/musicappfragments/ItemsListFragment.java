@@ -3,16 +3,20 @@ package com.example.vploaia.musicappfragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +33,8 @@ import android.widget.Toast;
 import com.example.vploaia.musicapp.R;
 
 import java.util.List;
+
+import static android.support.v7.appcompat.R.styleable.CompoundButton;
 
 /**
  * Created by vploaia on 3/1/2017.
@@ -261,9 +268,31 @@ public class ItemsListFragment extends Fragment {
             ListView view = (ListView) getView().findViewById(R.id.list_items);
             view.setVisibility(View.GONE);
             final View viewPos = getActivity().findViewById(R.id.myCoordinatorLayout);
-            Snackbar snackbar = Snackbar.make(viewPos, "No internet connection", Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(viewPos, "No internet connection", Snackbar.LENGTH_LONG).setAction("SWITCH_WIFI", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //enableWifi(true);
+                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+
+
+                }
+            });
             snackbar.show();
         }
     }
+
+   /* private void enableWifi(boolean status) {
+        WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+        if(status == true && !wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(true);
+        } else if (status == false && wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(false);
+        }
+
+    }*/
+
+
+
+
 
 }

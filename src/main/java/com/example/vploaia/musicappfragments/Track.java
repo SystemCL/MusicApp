@@ -24,7 +24,7 @@ public class Track implements Serializable {
     public String artworkUrl60;
     @SerializedName("artworkUrl100")
     public String artworkUrl100;
-    @SerializedName("isoffline")
+    @ SerializedName("isoffline")
     public boolean isOffline;
     @SerializedName("ratetrack")
     public double rateTrack;
@@ -41,15 +41,6 @@ public class Track implements Serializable {
 
     public void setArtistName (String artistName) { this.artistName = artistName; }
 
-/*    public String getTrackTimeMillis () {
-
-        //String value = trackTimeMillis;
-        //String time = new SimpleDateFormat("mm:ss").format(Long.parseLong(value));
-        String time = new SimpleDateFormat("mm:ss").format(trackTimeMillis);
-        return time;
-
-
-    }*/
 
     public long getTrackTimeMillis() {
         return trackTimeMillis;

@@ -55,11 +55,9 @@ public class ItemsListActivity extends AppCompatActivity implements OnListItemSe
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.activity_item_detail_container, fragmentItem);
             ft.commit();
-        } else { // separate activities
-            // launch detail activity using intent
-            Intent i = new Intent(ItemsListActivity.this, ItemDetailActivity.class);
-            i.putExtra("track", track);
-            startActivity(i);
+        } else {
+            ItemDetailActivity.track = track;
+            startActivity(new Intent(ItemsListActivity.this, ItemDetailActivity.class));
         }
     }
 

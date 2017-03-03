@@ -14,11 +14,11 @@
         android:id="@+id/rateTrackButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginTop = "365dp"
-        android:layout_marginLeft="250dp"
-        android:onClick="sendTrackToRate"
-        android:text="Rate" />
+        android:layout_marginStart="250dp"
+        android:layout_marginTop="365dp"
+        android:onClick=""
+        android:text="Rate"
+        android:visibility="gone" />
 
 </FrameLayout>
 

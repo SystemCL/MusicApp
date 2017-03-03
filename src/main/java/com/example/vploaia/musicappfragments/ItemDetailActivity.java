@@ -12,13 +12,12 @@ import com.example.vploaia.musicapp.R;
 
 public class ItemDetailActivity extends FragmentActivity {
     ItemDetailFragment fragmentItemDetail;
+    public static Track track;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
-
-        Track track = (Track) getIntent().getSerializableExtra("track");
 
         if (track.isOffline) {
             Button rateButton = (Button) findViewById(R.id.rateTrackButton);
@@ -28,6 +27,7 @@ public class ItemDetailActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
             //insert detail fragment based on the item passed
+
             fragmentItemDetail = ItemDetailFragment.newInstance(track);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.activity_item_detail_container, fragmentItemDetail);
@@ -36,7 +36,6 @@ public class ItemDetailActivity extends FragmentActivity {
         }
 
     }
-
 
 
 }

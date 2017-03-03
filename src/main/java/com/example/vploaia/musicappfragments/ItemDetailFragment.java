@@ -24,7 +24,6 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //  track = (Track) getArguments().getSerializable("track");
 
     }
 
@@ -41,11 +40,8 @@ public class ItemDetailFragment extends Fragment {
         TextView trackTimeMillisTextView = (TextView) view.findViewById(R.id.trackTimeMillis);
         trackTimeMillisTextView.setText(String.valueOf(track.getTrackTimeMillisConverted()));
         ImageView fullImageView = (ImageView) view.findViewById(R.id.fullImage);
-        if (track.isOffline == true) {
-            Picasso.with(getActivity()).load(track.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);
-        } else {
-            Picasso.with(getActivity()).load(track.getArtworkUrl100()).networkPolicy(NetworkPolicy.OFFLINE).into(fullImageView);
-        }
+        Picasso.with(getActivity()).load(track.getArtworkUrl100()).error(R.mipmap.ic_error_image).into(fullImageView);
+
 
         return view;
     }
