@@ -22,12 +22,10 @@ public class ItemDetailActivity extends FragmentActivity {
         if (track.isOffline) {
             Button rateButton = (Button) findViewById(R.id.rateTrackButton);
             rateButton.setVisibility(View.VISIBLE);
-
         }
 
         if (savedInstanceState == null) {
             //insert detail fragment based on the item passed
-
             fragmentItemDetail = ItemDetailFragment.newInstance(track);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.activity_item_detail_container, fragmentItemDetail);

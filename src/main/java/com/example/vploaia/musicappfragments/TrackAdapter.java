@@ -53,17 +53,11 @@ public class TrackAdapter extends ArrayAdapter<Track> {
     }
 
     static class ViewHolder {
-        protected TextView trackName;
-        protected TextView artistName;
-        protected TextView trackTimeMillis;
-        protected ImageView artworkUrl60;
+        TextView trackName;
+        TextView artistName;
+        TextView trackTimeMillis;
+        ImageView artworkUrl60;
 
 
-    }
-
-    @Override
-    public void notifyDataSetChanged()
-    {
-        super.notifyDataSetChanged();
     }
 }

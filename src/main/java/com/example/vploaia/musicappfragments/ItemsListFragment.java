@@ -82,7 +82,6 @@ public class ItemsListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
 
-
     }
 
     @Override
